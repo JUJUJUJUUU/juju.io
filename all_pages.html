@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计我家2.0 - 所有页面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --app-height: 790px;
+            --app-width: 373px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #111;
+            color: #000;
+            margin: 0;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+
+        .page-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .app-frame {
+            width: var(--app-width);
+            height: var(--app-height);
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            border-radius: 40px;
+            box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 滚动条样式 */
+        .page-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .page-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .page-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .page-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 加载指示器 */
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 9999;
+        }
+        
+        .loading-indicator::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .control-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 隐藏调试工具栏的全局样式 */
+        .debug-toolbar,
+        [class*="debug"],
+        [id*="debug"],
+        [class*="toolbar"],
+        [id*="toolbar"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            border: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-white text-2xl font-bold text-center mb-6">设计我家2.0 - 所有页面</h1>
+    
+    <div class="controls">
+        <button class="control-button" id="refreshAll">刷新所有页面</button>
+    </div>
+    
+    <div class="page-container">
+        <!-- 首次进入页面 -->
+        <div class="page-item">
+            <div class="page-title">首次进入</div>
+            <div class="app-frame" id="firstTime-container" data-src="../index.html?view=firstTime"></div>
+        </div>
+        
+        <!-- 未绑定户型+无需求表达 -->
+        <div class="page-item">
+            <div class="page-title">未绑定户型+无需求表达</div>
+            <div class="app-frame" id="chat-container" data-src="../index.html?view=chat"></div>
+        </div>
+        
+        <!-- 绑定户型 -->
+        <div class="page-item">
+            <div class="page-title">绑定户型</div>
+            <div class="app-frame" id="bindHouse-container" data-src="../index.html?view=bindHouse"></div>
+        </div>
+        
+        <!-- 已绑定户型+无需求表达 -->
+        <div class="page-item">
+            <div class="page-title">已绑定户型+无需求表达</div>
+            <div class="app-frame" id="chatWithHouse-container" data-src="../index.html?view=chatWithHouse"></div>
+        </div>
+        
+        <!-- 已绑定户型+有需求表达 -->
+        <div class="page-item">
+            <div class="page-title">已绑定户型+有需求表达</div>
+            <div class="app-frame" id="chatWithHouseAndNeeds-container" data-src="../index.html?view=chatWithHouseAndNeeds"></div>
+        </div>
+        
+        <!-- 内容更新首页 -->
+        <div class="page-item">
+            <div class="page-title">内容更新首页</div>
+            <div class="app-frame" id="contentUpdate-container" data-src="../index.html?view=contentUpdate"></div>
+        </div>
+        
+        <!-- 邻居案例 -->
+        <div class="page-item">
+            <div class="page-title">邻居案例</div>
+            <div class="app-frame" id="solutions-container" data-src="../solutions.html"></div>
+        </div>
+        
+        <!-- 找服务 -->
+        <div class="page-item">
+            <div class="page-title">找服务</div>
+            <div class="app-frame" id="services-container" data-src="../services.html"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有容器
+            const containers = document.querySelectorAll('.app-frame');
+            
+            // 处理每个容器
+            containers.forEach(container => {
+                // 显示加载指示器
+                const loadingIndicator = document.createElement('div');
+                loadingIndicator.className = 'loading-indicator';
+                loadingIndicator.textContent = '加载中';
+                container.appendChild(loadingIndicator);
+                
+                // 获取源URL
+                const src = container.getAttribute('data-src');
+                
+                // 创建iframe但不直接添加到DOM
+                const iframe = document.createElement('iframe');
+                iframe.className = 'iframe-container';
+                
+                // 设置iframe的srcdoc属性，注入移除调试工具栏的代码
+                iframe.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body, html {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                            iframe {
+                                width: 100%;
+                                height: 100%;
+                                border: none;
+                            }
+                            .debug-toolbar,
+                            [class*="debug"],
+                            [id*="debug"],
+                            [class*="toolbar"],
+                            [id*="toolbar"] {
+                                display: none !important;
+                                visibility: hidden !important;
+                                opacity: 0 !important;
+                                height: 0 !important;
+                                position: absolute !important;
+                                top: -9999px !important;
+                                left: -9999px !important;
+                                pointer-events: none !important;
+                                z-index: -9999 !important;
+                                width: 0 !important;
+                                overflow: hidden !important;
+                                clip: rect(0, 0, 0, 0) !important;
+                                border: 0 !important;
+                                padding: 0 !important;
+                                margin: 0 !important;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe id="contentFrame" src="${src}"></iframe>
+                        <script>
+                            // 等待内容iframe加载完成
+                            document.getElementById('contentFrame').onload = function() {
+                                try {
+                                    // 获取内容iframe的文档
+                                    const contentDoc = this.contentWindow.document;
+                                    
+                                    // 创建并注入样式
+                                    const style = document.createElement('style');
+                                    contentDoc.head.appendChild(style);
+                                    style.textContent = \`
+                                        .debug-toolbar,
+                                        [class*="debug"],
+                                        [id*="debug"],
+                                        [class*="toolbar"],
+                                        [id*="toolbar"] {
+                                            display: none !important;
+                                            visibility: hidden !important;
+                                            opacity: 0 !important;
+                                            height: 0 !important;
+                                            position: absolute !important;
+                                            top: -9999px !important;
+                                            left: -9999px !important;
+                                            pointer-events: none !important;
+                                            z-index: -9999 !important;
+                                            width: 0 !important;
+                                            overflow: hidden !important;
+                                            clip: rect(0, 0, 0, 0) !important;
+                                            border: 0 !important;
+                                            padding: 0 !important;
+                                            margin: 0 !important;
+                                        }
+                                        
+                                        body {
+                                            padding-top: 0 !important;
+                                            margin-top: 0 !important;
+                                        }
+                                    \`;
+                                    
+                                    // 移除所有调试工具栏元素
+                                    const removeDebugElements = function() {
+                                        const selectors = [
+                                            '.debug-toolbar',
+                                            '[class*="debug"]',
+                                            '[id*="debug"]',
+                                            '[class*="toolbar"]',
+                                            '[id*="toolbar"]'
+                                        ];
+                                        
+                                        selectors.forEach(selector => {
+                                            const elements = contentDoc.querySelectorAll(selector);
+                                            elements.forEach(el => {
+                                                if (el && el.parentNode) {
+                                                    el.parentNode.removeChild(el);
+                                                }
+                                            });
+                                        });
+                                        
+                                        // 移除body上的padding-top
+                                        if (contentDoc.body) {
+                                            contentDoc.body.style.paddingTop = '0';
+                                        }
+                                    };
+                                    
+                                    // 立即移除调试元素
+                                    removeDebugElements();
+                                    
+                                    // 设置MutationObserver监控DOM变化
+                                    const observer = new MutationObserver(function() {
+                                        removeDebugElements();
+                                    });
+                                    
+                                    // 配置观察选项
+                                    const config = { 
+                                        childList: true, 
+                                        subtree: true,
+                                        attributes: true
+                                    };
+                                    
+                                    // 开始观察
+                                    observer.observe(contentDoc.body || contentDoc.documentElement, config);
+                                    
+                                    // 处理视图切换
+                                    const src = "${src}";
+                                    if (src && src.includes('?view=')) {
+                                        const viewParam = src.split('?view=')[1];
+                                        const toggleButton = contentDoc.getElementById(viewParam + 'Toggle');
+                                        if (toggleButton) {
+                                            setTimeout(() => {
+                                                toggleButton.click();
+                                            }, 300);
+                                        }
+                                    }
+                                    
+                                    // 定期检查并移除调试工具栏
+                                    const intervalId = setInterval(removeDebugElements, 100);
+                                    
+                                    // 10秒后停止检查
+                                    setTimeout(() => {
+                                        clearInterval(intervalId);
+                                    }, 10000);
+                                    
+                                    // 通知父窗口加载完成
+                                    window.parent.postMessage('frameLoaded', '*');
+                                } catch (error) {
+                                    console.error('处理内容iframe时出错:', error);
+                                    // 通知父窗口加载完成（即使出错）
+                                    window.parent.postMessage('frameLoaded', '*');
+                                }
+                            };
+                        <\/script>
+                    </body>
+                    </html>
+                `;
+                
+                // 监听消息事件
+                window.addEventListener('message', function(event) {
+                    if (event.data === 'frameLoaded') {
+                        // 移除加载指示器
+                        if (loadingIndicator && loadingIndicator.parentElement) {
+                            loadingIndicator.parentElement.removeChild(loadingIndicator);
+                        }
+                    }
+                });
+                
+                // 添加iframe到容器
+                container.appendChild(iframe);
+            });
+            
+            // 刷新所有页面按钮
+            document.getElementById('refreshAll').addEventListener('click', function() {
+                containers.forEach(container => {
+                    // 显示加载指示器
+                    const loadingIndicator = document.createElement('div');
+                    loadingIndicator.className = 'loading-indicator';
+                    loadingIndicator.textContent = '加载中';
+                    container.appendChild(loadingIndicator);
+                    
+                    // 移除旧的iframe
+                    const oldIframe = container.querySelector('iframe');
+                    if (oldIframe) {
+                        container.removeChild(oldIframe);
+                    }
+                    
+                    // 创建新的iframe
+                    const iframe = document.createElement('iframe');
+                    iframe.className = 'iframe-container';
+                    
+                    // 获取源URL
+                    const src = container.getAttribute('data-src');
+                    
+                    // 设置iframe的srcdoc属性
+                    iframe.srcdoc = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <style>
+                                body, html {
+                                    margin: 0;
+                                    padding: 0;
+                                    height: 100%;
+                                    overflow: hidden;
+                                }
+                                iframe {
+                                    width: 100%;
+                                    height: 100%;
+                                    border: none;
+                                }
+                                .debug-toolbar,
+                                [class*="debug"],
+                                [id*="debug"],
+                                [class*="toolbar"],
+                                [id*="toolbar"] {
+                                    display: none !important;
+                                    visibility: hidden !important;
+                                    opacity: 0 !important;
+                                    height: 0 !important;
+                                    position: absolute !important;
+                                    top: -9999px !important;
+                                    left: -9999px !important;
+                                    pointer-events: none !important;
+                                    z-index: -9999 !important;
+                                    width: 0 !important;
+                                    overflow: hidden !important;
+                                    clip: rect(0, 0, 0, 0) !important;
+                                    border: 0 !important;
+                                    padding: 0 !important;
+                                    margin: 0 !important;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <iframe id="contentFrame" src="${src}"></iframe>
+                            <script>
+                                // 等待内容iframe加载完成
+                                document.getElementById('contentFrame').onload = function() {
+                                    try {
+                                        // 获取内容iframe的文档
+                                        const contentDoc = this.contentWindow.document;
+                                        
+                                        // 创建并注入样式
+                                        const style = document.createElement('style');
+                                        contentDoc.head.appendChild(style);
+                                        style.textContent = \`
+                                            .debug-toolbar,
+                                            [class*="debug"],
+                                            [id*="debug"],
+                                            [class*="toolbar"],
+                                            [id*="toolbar"] {
+                                                display: none !important;
+                                                visibility: hidden !important;
+                                                opacity: 0 !important;
+                                                height: 0 !important;
+                                                position: absolute !important;
+                                                top: -9999px !important;
+                                                left: -9999px !important;
+                                                pointer-events: none !important;
+                                                z-index: -9999 !important;
+                                                width: 0 !important;
+                                                overflow: hidden !important;
+                                                clip: rect(0, 0, 0, 0) !important;
+                                                border: 0 !important;
+                                                padding: 0 !important;
+                                                margin: 0 !important;
+                                            }
+                                            
+                                            body {
+                                                padding-top: 0 !important;
+                                                margin-top: 0 !important;
+                                            }
+                                        \`;
+                                        
+                                        // 移除所有调试工具栏元素
+                                        const removeDebugElements = function() {
+                                            const selectors = [
+                                                '.debug-toolbar',
+                                                '[class*="debug"]',
+                                                '[id*="debug"]',
+                                                '[class*="toolbar"]',
+                                                '[id*="toolbar"]'
+                                            ];
+                                            
+                                            selectors.forEach(selector => {
+                                                const elements = contentDoc.querySelectorAll(selector);
+                                                elements.forEach(el => {
+                                                    if (el && el.parentNode) {
+                                                        el.parentNode.removeChild(el);
+                                                    }
+                                                });
+                                            });
+                                            
+                                            // 移除body上的padding-top
+                                            if (contentDoc.body) {
+                                                contentDoc.body.style.paddingTop = '0';
+                                            }
+                                        };
+                                        
+                                        // 立即移除调试元素
+                                        removeDebugElements();
+                                        
+                                        // 设置MutationObserver监控DOM变化
+                                        const observer = new MutationObserver(function() {
+                                            removeDebugElements();
+                                        });
+                                        
+                                        // 配置观察选项
+                                        const config = { 
+                                            childList: true, 
+                                            subtree: true,
+                                            attributes: true
+                                        };
+                                        
+                                        // 开始观察
+                                        observer.observe(contentDoc.body || contentDoc.documentElement, config);
+                                        
+                                        // 处理视图切换
+                                        const src = "${src}";
+                                        if (src && src.includes('?view=')) {
+                                            const viewParam = src.split('?view=')[1];
+                                            const toggleButton = contentDoc.getElementById(viewParam + 'Toggle');
+                                            if (toggleButton) {
+                                                setTimeout(() => {
+                                                    toggleButton.click();
+                                                }, 300);
+                                            }
+                                        }
+                                        
+                                        // 定期检查并移除调试工具栏
+                                        const intervalId = setInterval(removeDebugElements, 100);
+                                        
+                                        // 10秒后停止检查
+                                        setTimeout(() => {
+                                            clearInterval(intervalId);
+                                        }, 10000);
+                                        
+                                        // 通知父窗口加载完成
+                                        window.parent.postMessage('frameLoaded', '*');
+                                    } catch (error) {
+                                        console.error('处理内容iframe时出错:', error);
+                                        // 通知父窗口加载完成（即使出错）
+                                        window.parent.postMessage('frameLoaded', '*');
+                                    }
+                                };
+                            <\/script>
+                        </body>
+                        </html>
+                    `;
+                    
+                    // 添加iframe到容器
+                    container.appendChild(iframe);
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
