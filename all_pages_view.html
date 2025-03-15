@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>所有页面视图 - 家装助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --app-width: 373px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #000;
+            margin: 0;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+
+        .page-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .app-container {
+            width: var(--app-width);
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            border-radius: 40px;
+            box-shadow: 0 0 0 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0 20px;
+        }
+
+        /* 复制原页面的样式 */
+        .main-container {
+            overflow-y: visible;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+            overscroll-behavior: none;
+        }
+        
+        .main-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .nav-tab {
+            position: relative;
+            padding: 8px 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:active {
+            opacity: 0.7;
+        }
+        
+        .tab-active {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        .tab-active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: #000;
+            border-radius: 50%;
+        }
+
+        /* 服务卡片样式 */
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+            backdrop-filter: blur(20px);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 案例卡片样式 */
+        .case-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .case-image {
+            position: relative;
+            padding-top: 75%;
+            overflow: hidden;
+        }
+
+        .case-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 筛选标签样式 */
+        .filter-tag {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 100px;
+            padding: 6px 12px;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .filter-tag.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* 半屏浮层相关样式 */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+        }
+
+        .half-screen-modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #6366f1;
+            border-radius: 2px;
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 2px;
+        }
+
+        .toggle-switch.active {
+            background: #6366f1;
+        }
+
+        .toggle-switch .toggle-handle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transform: translateX(0);
+        }
+
+        .toggle-switch.active .toggle-handle {
+            transform: translateX(20px);
+        }
+
+        /* 设计师卡片样式 */
+        .designer-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .designer-image {
+            position: relative;
+            padding-top: 100%;
+            overflow: hidden;
+        }
+
+        .designer-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 公司卡片样式 */
+        .company-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .company-logo {
+            width: 48px;
+            height: 48px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .rating-stars {
+            color: #FFB800;
+        }
+
+        /* 欢迎部分样式 */
+        .welcome-container {
+            padding: 24px 16px;
+            background: linear-gradient(180deg, #f8f8f8 0%, #ffffff 100%);
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .welcome-subtitle {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            line-height: 1.4;
+        }
+
+        /* 快捷操作部分样式 */
+        .quick-actions-container {
+            padding: 16px;
+        }
+
+        /* 灵感集部分样式 */
+        .inspiration-container {
+            padding: 16px;
+        }
+
+        .inspiration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .inspiration-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .inspiration-more {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .inspiration-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-3xl font-bold text-center my-6">家装助手 - 所有页面视图</h1>
+    
+    <div class="page-container">
+        <!-- 找灵感页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">找灵感</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab tab-active text-base">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 首次进入状态 -->
+                <div class="main-container">
+                    <!-- 欢迎语部分 -->
+                    <div class="welcome-container">
+                        <div class="welcome-title">嗨！我是设牛</div>
+                        <div class="welcome-subtitle">我可以帮您定制专属于您的个性化装修方案，解决您的问题，帮您整理需求</div>
+                        
+                        <!-- 添加我家户型模块 -->
+                        <div class="w-full mt-4">
+                            <div class="service-card p-4">
+                                <div class="flex items-center">
+                                    <i class="ri-home-4-line text-2xl mr-4"></i>
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-base mb-1">告诉我您家的户型信息</h3>
+                                        <p class="text-sm text-black/40">帮您找到同户型的装修案例~</p>
+                                    </div>
+                                    <i class="ri-arrow-right-s-line text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 快捷操作部分 -->
+                    <div class="quick-actions-container">
+                        <!-- 快捷操作按钮 -->
+                        <div class="flex justify-center gap-2 mb-6 px-4 w-full">
+                            <button class="bg-black/5 rounded-xl px-2 py-1.5 text-xs">
+                                看效果图
+                            </button>
+                            <button class="bg-black/5 rounded-xl px-2 py-1.5 text-xs">
+                                修改需求
+                            </button>
+                            <button class="bg-black/5 rounded-xl px-2 py-1.5 text-xs">
+                                看邻居案例
+                            </button>
+                        </div>
+                        
+                        <!-- 灵感集部分 -->
+                        <div class="inspiration-container">
+                            <div class="inspiration-header">
+                                <div class="inspiration-title">灵感集</div>
+                                <button class="inspiration-more">查看更多</button>
+                            </div>
+                            
+                            <div class="inspiration-grid">
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="灵感1">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                        <div class="text-sm">90㎡两室一厅</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="灵感2">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">北欧风格</div>
+                                        <div class="text-sm">88㎡两室一厅</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="灵感3">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">日式风格</div>
+                                        <div class="text-sm">92㎡三室一厅</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7" alt="灵感4">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">混搭风格</div>
+                                        <div class="text-sm">85㎡两室一厅</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 未绑定户型+无需求表达页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">未绑定户型+无需求表达</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab tab-active text-base">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 聊天界面 -->
+                <div class="main-container">
+                    <!-- 聊天内容 -->
+                    <div class="p-4">
+                        <!-- AI消息 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+                                    <i class="ri-robot-line text-lg"></i>
+                                </div>
+                                <div class="flex-1 p-3 bg-black/5 rounded-2xl">
+                                    <p class="text-sm">您好！我是您的家装助手设牛，很高兴为您服务。请问您想了解什么家装相关的问题呢？</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 用户消息 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3 justify-end">
+                                <div class="flex-1 p-3 bg-black rounded-2xl">
+                                    <p class="text-sm text-white">我想看看现代简约风格的装修案例</p>
+                                </div>
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="ri-user-line text-lg text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI消息带推荐 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+                                    <i class="ri-robot-line text-lg"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="p-3 bg-black/5 rounded-2xl mb-2">
+                                        <p class="text-sm">好的，这里有一些现代简约风格的装修案例，您可以看看：</p>
+                                    </div>
+                                    
+                                    <!-- 推荐案例 -->
+                                    <div class="grid grid-cols-2 gap-2 mb-2">
+                                        <div class="case-card">
+                                            <div class="case-image">
+                                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="现代简约1">
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                                <div class="text-xs">90㎡两室一厅</div>
+                                            </div>
+                                        </div>
+                                        <div class="case-card">
+                                            <div class="case-image">
+                                                <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="现代简约2">
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                                <div class="text-xs">85㎡两室一厅</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-3 bg-black/5 rounded-2xl">
+                                        <p class="text-sm">如果您告诉我您家的户型信息，我可以为您推荐更加匹配的案例哦！</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 添加户型卡片 -->
+                        <div class="service-card p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="ri-home-4-line text-2xl mr-4"></i>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">添加我家户型</h3>
+                                    <p class="text-sm text-black/40">帮您找到同户型的装修案例</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部输入框 -->
+                    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-black/5">
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-black/5 rounded-full px-4 py-2 flex items-center">
+                                <input type="text" placeholder="输入您的问题..." class="bg-transparent w-full outline-none text-sm">
+                            </div>
+                            <button class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                                <i class="ri-send-plane-fill text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 已绑定户型+无需求表达页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">已绑定户型+无需求表达</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab tab-active text-base">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 聊天界面 -->
+                <div class="main-container">
+                    <!-- 聊天内容 -->
+                    <div class="p-4">
+                        <!-- 户型信息卡片 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center">
+                                    <i class="ri-map-pin-line text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium">北三环中路43号院</div>
+                                    <div class="text-sm text-black/40">三室一厅/120平</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-1/2">
+                                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="户型图" class="w-full rounded-xl">
+                                </div>
+                                <div class="w-1/2 grid grid-cols-2 gap-1.5">
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-sun-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">朝南卧室</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-home-smile-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">明卫</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-layout-masonry-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">超大空间</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-dashboard-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">全格局</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI消息 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+                                    <i class="ri-robot-line text-lg"></i>
+                                </div>
+                                <div class="flex-1 p-3 bg-black/5 rounded-2xl">
+                                    <p class="text-sm">您好！我看到您家是北三环中路43号院的三室一厅，120平米的户型。请问您想了解什么家装相关的问题呢？</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 用户消息 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3 justify-end">
+                                <div class="flex-1 p-3 bg-black rounded-2xl">
+                                    <p class="text-sm text-white">我想看看适合我家户型的现代简约风格装修案例</p>
+                                </div>
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="ri-user-line text-lg text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI消息带推荐 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+                                    <i class="ri-robot-line text-lg"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="p-3 bg-black/5 rounded-2xl mb-2">
+                                        <p class="text-sm">好的，根据您家的户型信息，我为您找到了一些适合的现代简约风格装修案例：</p>
+                                    </div>
+                                    
+                                    <!-- 推荐案例 -->
+                                    <div class="grid grid-cols-2 gap-2 mb-2">
+                                        <div class="case-card">
+                                            <div class="case-image">
+                                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="现代简约1">
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                                <div class="text-xs">120㎡三室一厅</div>
+                                            </div>
+                                        </div>
+                                        <div class="case-card">
+                                            <div class="case-image">
+                                                <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="现代简约2">
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                                <div class="text-xs">118㎡三室一厅</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-3 bg-black/5 rounded-2xl">
+                                        <p class="text-sm">这些案例都是三室一厅，面积在120平米左右的户型，非常适合您家。您可以点击查看详情，或者告诉我您对装修有什么特别的需求，我可以为您提供更精准的推荐。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 表达需求卡片 -->
+                        <div class="service-card p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="ri-file-list-line text-2xl mr-4"></i>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">表达我的装修需求</h3>
+                                    <p class="text-sm text-black/40">帮您找到更匹配的装修方案</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部输入框 -->
+                    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-black/5">
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-black/5 rounded-full px-4 py-2 flex items-center">
+                                <input type="text" placeholder="输入您的问题..." class="bg-transparent w-full outline-none text-sm">
+                            </div>
+                            <button class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                                <i class="ri-send-plane-fill text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 已绑定户型+有需求表达页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">已绑定户型+有需求表达</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab tab-active text-base">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 聊天界面 -->
+                <div class="main-container">
+                    <!-- 聊天内容 -->
+                    <div class="p-4">
+                        <!-- 户型信息卡片 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center">
+                                    <i class="ri-map-pin-line text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium">北三环中路43号院</div>
+                                    <div class="text-sm text-black/40">三室一厅/120平</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-1/2">
+                                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="户型图" class="w-full rounded-xl">
+                                </div>
+                                <div class="w-1/2 grid grid-cols-2 gap-1.5">
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-sun-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">朝南卧室</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-home-smile-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">明卫</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-layout-masonry-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">超大空间</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-dashboard-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">全格局</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 需求信息卡片 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-lg font-medium">我的装修需求</div>
+                                <button class="text-sm text-black/40">
+                                    <i class="ri-edit-line"></i> 编辑
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-user-smile-line text-xl"></i>
+                                        <span>我还有娃</span>
+                                    </div>
+                                    <div class="toggle-switch active">
+                                        <div class="toggle-handle" style="transform: translateX(20px);"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-restaurant-line text-xl"></i>
+                                        <span>喜欢开放式厨房</span>
+                                    </div>
+                                    <div class="toggle-switch active">
+                                        <div class="toggle-handle" style="transform: translateX(20px);"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-home-smile-line text-xl"></i>
+                                        <span>喜欢超大客厅</span>
+                                    </div>
+                                    <div class="toggle-switch active">
+                                        <div class="toggle-handle" style="transform: translateX(20px);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI消息 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+                                    <i class="ri-robot-line text-lg"></i>
+                                </div>
+                                <div class="flex-1 p-3 bg-black/5 rounded-2xl">
+                                    <p class="text-sm">您好！根据您的户型信息和装修需求，我为您推荐了一些适合有孩子家庭、带开放式厨房和大客厅的装修方案。请问您想了解什么具体的装修问题呢？</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 用户消息 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3 justify-end">
+                                <div class="flex-1 p-3 bg-black rounded-2xl">
+                                    <p class="text-sm text-white">我想看看适合我家的现代简约风格装修案例</p>
+                                </div>
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="ri-user-line text-lg text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI消息带推荐 -->
+                        <div class="mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center">
+                                    <i class="ri-robot-line text-lg"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="p-3 bg-black/5 rounded-2xl mb-2">
+                                        <p class="text-sm">好的，根据您的户型信息和装修需求，我为您找到了一些适合的现代简约风格装修案例，这些案例都考虑了儿童友好设计、开放式厨房和宽敞的客厅空间：</p>
+                                    </div>
+                                    
+                                    <!-- 推荐案例 -->
+                                    <div class="grid grid-cols-2 gap-2 mb-2">
+                                        <div class="case-card">
+                                            <div class="case-image">
+                                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="现代简约1">
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                                <div class="text-xs">120㎡三室一厅</div>
+                                            </div>
+                                        </div>
+                                        <div class="case-card">
+                                            <div class="case-image">
+                                                <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="现代简约2">
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                                <div class="text-xs">118㎡三室一厅</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-3 bg-black/5 rounded-2xl">
+                                        <p class="text-sm">这些案例都特别考虑了您的需求，包括儿童友好的设计、开放式厨房和宽敞的客厅。您可以点击查看详情，或者告诉我您还有什么其他的问题。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部输入框 -->
+                    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-black/5">
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-black/5 rounded-full px-4 py-2 flex items-center">
+                                <input type="text" placeholder="输入您的问题..." class="bg-transparent w-full outline-none text-sm">
+                            </div>
+                            <button class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                                <i class="ri-send-plane-fill text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 邻居案例页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">邻居案例</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab text-base text-black/40">找灵感</div>
+                            <div class="nav-tab tab-active text-base">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <!-- 房屋信息 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center">
+                                    <i class="ri-map-pin-line text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium">北三环中路43号院</div>
+                                    <div class="text-sm text-black/40">三室一厅/120平</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-4">
+                                <div class="w-8 h-8 bg-black/5 rounded-xl flex items-center justify-center">
+                                    <i class="ri-bookmark-line text-xl"></i>
+                                </div>
+                                <div class="text-lg font-medium">评分 9.4 分</div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-1/2">
+                                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7" alt="户型图" class="w-full rounded-xl">
+                                </div>
+                                <div class="w-1/2 grid grid-cols-2 gap-1.5">
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-sun-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">朝南卧室</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-home-smile-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">明卫</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-layout-masonry-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">超大空间</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-dashboard-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">全格局</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 看邻居案例 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">看邻居案例</h2>
+                                <button class="text-sm text-black/40">查看更多</button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7" alt="案例1">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">昌平·新龙城</div>
+                                        <div class="text-sm">90㎡现代简约</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="案例2">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">昌平·新龙城</div>
+                                        <div class="text-sm">88㎡北欧风格</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="案例3">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">昌平·新龙城</div>
+                                        <div class="text-sm">92㎡日式风格</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="案例4">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">昌平·新龙城</div>
+                                        <div class="text-sm">85㎡混搭风格</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 看附近工地 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">看附近工地</h2>
+                            </div>
+                            <div class="relative w-full pt-[60%] bg-[#f5f5f5] rounded-2xl overflow-hidden mb-3">
+                                <img src="https://mdn.alipayobjects.com/huamei_p0cigc/afts/img/A*vAKVRJ0XdxEAAAAAAAAAAAAADuJ6AQ/original" alt="工地地图" class="absolute top-0 left-0 w-full h-full object-cover">
+                            </div>
+                            <div class="text-sm text-black/60">
+                                <i class="ri-map-pin-line"></i>
+                                <span>离我家小区1.5公里</span>
+                            </div>
+                        </div>
+
+                        <!-- 案例筛选 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">精选案例</h2>
+                                <button class="text-sm text-black/40">筛选</button>
+                            </div>
+                            <div class="flex gap-2 overflow-x-auto mb-4 no-scrollbar">
+                                <button class="filter-tag active whitespace-nowrap">全部</button>
+                                <button class="filter-tag whitespace-nowrap">90-120㎡</button>
+                                <button class="filter-tag whitespace-nowrap">现代简约</button>
+                                <button class="filter-tag whitespace-nowrap">北欧风格</button>
+                                <button class="filter-tag whitespace-nowrap">日式</button>
+                                <button class="filter-tag whitespace-nowrap">美式</button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="案例1">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">昌平·新龙城</div>
+                                        <div class="text-sm">90㎡现代简约</div>
+                                    </div>
+                                </div>
+                                <div class="case-card">
+                                    <div class="case-image">
+                                        <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="案例2">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="text-xs text-black/40 mb-1">昌平·新龙城</div>
+                                        <div class="text-sm">88㎡北欧风格</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 找服务页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">找服务</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab text-base text-black/40">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab tab-active text-base">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <!-- 装修服务 -->
+                        <div class="mb-8">
+                            <h2 class="text-lg font-medium mb-4">装修服务</h2>
+                            <div class="grid grid-cols-4 gap-3">
+                                <div class="flex flex-col items-center">
+                                    <div class="service-icon mb-2">
+                                        <i class="ri-user-star-line text-xl"></i>
+                                    </div>
+                                    <div class="text-xs">找设计师</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="service-icon mb-2">
+                                        <i class="ri-store-2-line text-xl"></i>
+                                    </div>
+                                    <div class="text-xs">看门店</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="service-icon mb-2">
+                                        <i class="ri-gift-2-line text-xl"></i>
+                                    </div>
+                                    <div class="text-xs">看套餐</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="service-icon mb-2">
+                                        <i class="ri-calculator-line text-xl"></i>
+                                    </div>
+                                    <div class="text-xs">算报价</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 推荐设计师 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">推荐设计师</h2>
+                                <button class="text-sm text-black/40">查看更多</button>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="designer-card">
+                                    <div class="designer-image">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" alt="设计师1">
+                                    </div>
+                                    <div class="p-2 text-center">
+                                        <div class="font-medium text-sm mb-1">王设计师</div>
+                                        <div class="text-xs text-black/40">5年经验</div>
+                                    </div>
+                                </div>
+                                <div class="designer-card">
+                                    <div class="designer-image">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="设计师2">
+                                    </div>
+                                    <div class="p-2 text-center">
+                                        <div class="font-medium text-sm mb-1">李设计师</div>
+                                        <div class="text-xs text-black/40">7年经验</div>
+                                    </div>
+                                </div>
+                                <div class="designer-card">
+                                    <div class="designer-image">
+                                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500" alt="设计师3">
+                                    </div>
+                                    <div class="p-2 text-center">
+                                        <div class="font-medium text-sm mb-1">张设计师</div>
+                                        <div class="text-xs text-black/40">3年经验</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 软装换搭 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">软装换搭</h2>
+                                <button class="text-sm text-black/40">查看更多</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="company-card p-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="company-logo">
+                                            <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=500" alt="公司1">
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-sm mb-1">北欧风软装搭配</div>
+                                            <div class="flex items-center gap-1">
+                                                <div class="rating-stars text-xs">★★★★★</div>
+                                                <div class="text-xs text-black/40">4.9分</div>
+                                            </div>
+                                        </div>
+                                        <button class="bg-black text-white text-xs px-3 py-1.5 rounded-full">
+                                            咨询
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="company-card p-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="company-logo">
+                                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500" alt="公司2">
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-sm mb-1">日式风格软装</div>
+                                            <div class="flex items-center gap-1">
+                                                <div class="rating-stars text-xs">★★★★★</div>
+                                                <div class="text-xs text-black/40">4.8分</div>
+                                            </div>
+                                        </div>
+                                        <button class="bg-black text-white text-xs px-3 py-1.5 rounded-full">
+                                            咨询
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="company-card p-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="company-logo">
+                                            <img src="https://images.unsplash.com/photo-1572025442646-866d16c84a54?w=500" alt="公司3">
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-sm mb-1">现代简约软装</div>
+                                            <div class="flex items-center gap-1">
+                                                <div class="rating-stars text-xs">★★★★★</div>
+                                                <div class="text-xs text-black/40">4.7分</div>
+                                            </div>
+                                        </div>
+                                        <button class="bg-black text-white text-xs px-3 py-1.5 rounded-full">
+                                            咨询
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 看门店 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">看门店</h2>
+                                <button class="text-sm text-black/40">查看更多</button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="site-card">
+                                    <div class="site-image">
+                                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500" alt="门店1">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="font-medium text-sm mb-1">优家家居体验店</div>
+                                        <div class="flex items-center gap-1 text-xs text-black/40">
+                                            <i class="ri-map-pin-line"></i>
+                                            <span>距离1.2公里</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="site-card">
+                                    <div class="site-image">
+                                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500" alt="门店2">
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="font-medium text-sm mb-1">宜家家居展厅</div>
+                                        <div class="flex items-center gap-1 text-xs text-black/40">
+                                            <i class="ri-map-pin-line"></i>
+                                            <span>距离2.5公里</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 服务卡片页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">服务卡片</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex items-center px-8 py-4">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">服务卡片</h2>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <!-- 计算报价服务卡片 -->
+                        <div class="service-card p-4 mb-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="ri-calculator-line text-2xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">算算报价</h3>
+                                    <p class="text-sm text-black/40">根据您的户型和需求，为您提供精准装修报价</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 看效果图服务卡片 -->
+                        <div class="service-card p-4 mb-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="ri-image-line text-2xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">看效果图</h3>
+                                    <p class="text-sm text-black/40">查看您家装修的3D效果图，提前感受装修效果</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 看灵感集服务卡片 -->
+                        <div class="service-card p-4 mb-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="ri-lightbulb-line text-2xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">看灵感集</h3>
+                                    <p class="text-sm text-black/40">浏览您收藏的装修灵感，帮助您确定装修风格</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 找设计师服务卡片 -->
+                        <div class="service-card p-4 mb-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="ri-user-star-line text-2xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">找设计师</h3>
+                                    <p class="text-sm text-black/40">为您推荐专业设计师，打造专属于您的家</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 找装修公司服务卡片 -->
+                        <div class="service-card p-4 mb-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="ri-building-line text-2xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">找装修公司</h3>
+                                    <p class="text-sm text-black/40">为您推荐靠谱装修公司，保障装修质量</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 半屏浮层页面 - 需求表达 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">半屏浮层 - 需求表达</h2>
+            <div class="app-container" style="position: relative; height: 700px; overflow: visible;">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex items-center px-8 py-4">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">半屏浮层</h2>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <div class="text-center py-8">
+                            <p class="text-lg font-medium mb-4">需求表达浮层</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 半屏浮层遮罩 -->
+                <div class="modal-overlay"></div>
+
+                <!-- 需求表达半屏浮层 -->
+                <div class="half-screen-modal" style="height: 70%; position: absolute; bottom: 0; left: 0; width: 100%; z-index: 1000;">
+                    <div class="p-4">
+                        <!-- 顶部进度条和标题 -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="text-lg font-medium">定制专属我的装修方案</div>
+                                <button class="text-black/40">
+                                    <i class="ri-close-line text-xl"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="progress-bar flex-1">
+                                    <div class="progress-fill" style="width: 50%"></div>
+                                </div>
+                                <div class="text-sm text-black/40">1/2</div>
+                            </div>
+                        </div>
+
+                        <!-- 我家住几口 -->
+                        <div class="mb-6">
+                            <div class="text-base font-medium mb-1">我家住几口</div>
+                            <div class="text-sm text-black/60 mb-3">打造专属自己的个性化空间，你说我做，百分百满足所有需求</div>
+                            <div class="flex items-center justify-between bg-black/3 rounded-2xl p-3">
+                                <div class="text-base">家庭成员</div>
+                                <div class="flex items-center gap-4">
+                                    <button class="text-xl">-</button>
+                                    <span class="text-base w-8 text-center">3</span>
+                                    <button class="text-xl">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 特殊需求 -->
+                        <div class="mb-6">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-user-smile-line text-xl"></i>
+                                        <span>我还有娃</span>
+                                    </div>
+                                    <div class="toggle-switch">
+                                        <div class="toggle-handle"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-user-heart-line text-xl"></i>
+                                        <span>家有老人</span>
+                                    </div>
+                                    <div class="toggle-switch">
+                                        <div class="toggle-handle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 我的生活 -->
+                        <div class="mb-6">
+                            <div class="text-base font-medium mb-1">我的生活</div>
+                            <div class="text-sm text-black/60 mb-3">你说我做，打造最适合的空间布局</div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-restaurant-line text-xl"></i>
+                                        <span>喜欢开放式厨房</span>
+                                    </div>
+                                    <div class="toggle-switch">
+                                        <div class="toggle-handle"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-home-smile-line text-xl"></i>
+                                        <span>喜欢超大客厅</span>
+                                    </div>
+                                    <div class="toggle-switch">
+                                        <div class="toggle-handle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 底部按钮 -->
+                        <button class="w-full bg-black text-white py-3 rounded-2xl text-base font-medium">
+                            我家方案定制完成！
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 半屏浮层页面 - 我的 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">半屏浮层 - 我的</h2>
+            <div class="app-container" style="position: relative; height: 600px; overflow: visible;">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex items-center px-8 py-4">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">半屏浮层</h2>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <div class="text-center py-8">
+                            <p class="text-lg font-medium mb-4">我的浮层</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 半屏浮层遮罩 -->
+                <div class="modal-overlay"></div>
+
+                <!-- 我的浮层 -->
+                <div class="half-screen-modal" style="height: 40%;">
+                    <div class="p-4">
+                        <!-- 顶部标题 -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="text-lg font-medium">我的</div>
+                                <button class="text-black/40">
+                                    <i class="ri-close-line text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 功能入口 -->
+                        <div class="space-y-4">
+                            <div class="service-card p-4">
+                                <div class="flex items-center">
+                                    <i class="ri-lightbulb-line text-2xl mr-4"></i>
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-base">灵感集</h3>
+                                        <p class="text-sm text-black/40">查看您收藏的所有装修案例</p>
+                                    </div>
+                                    <i class="ri-arrow-right-s-line text-2xl"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card p-4">
+                                <div class="flex items-center">
+                                    <i class="ri-file-list-line text-2xl mr-4"></i>
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-base">需求档案</h3>
+                                        <p class="text-sm text-black/40">查看您的户型和装修需求信息</p>
+                                    </div>
+                                    <i class="ri-arrow-right-s-line text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 绑定户型页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">绑定户型</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab tab-active text-base">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 绑定户型表单 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <div class="mb-6">
+                            <h2 class="text-xl font-medium mb-2">添加我家户型</h2>
+                            <p class="text-sm text-black/60">请填写您家的户型信息，帮您找到更匹配的装修案例</p>
+                        </div>
+                        
+                        <!-- 表单内容 -->
+                        <div class="space-y-4">
+                            <!-- 小区名称 -->
+                            <div>
+                                <label class="block text-sm font-medium mb-1">小区名称</label>
+                                <input type="text" placeholder="请输入小区名称" class="w-full p-3 bg-black/5 rounded-xl outline-none">
+                            </div>
+                            
+                            <!-- 户型选择 -->
+                            <div>
+                                <label class="block text-sm font-medium mb-1">户型</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button class="p-2 bg-black/5 rounded-xl text-sm active:bg-black active:text-white">一室一厅</button>
+                                    <button class="p-2 bg-black/5 rounded-xl text-sm active:bg-black active:text-white">两室一厅</button>
+                                    <button class="p-2 bg-black text-white rounded-xl text-sm">三室一厅</button>
+                                    <button class="p-2 bg-black/5 rounded-xl text-sm active:bg-black active:text-white">三室两厅</button>
+                                    <button class="p-2 bg-black/5 rounded-xl text-sm active:bg-black active:text-white">四室两厅</button>
+                                    <button class="p-2 bg-black/5 rounded-xl text-sm active:bg-black active:text-white">其他</button>
+                                </div>
+                            </div>
+                            
+                            <!-- 面积 -->
+                            <div>
+                                <label class="block text-sm font-medium mb-1">面积</label>
+                                <div class="flex items-center">
+                                    <input type="number" placeholder="请输入面积" class="flex-1 p-3 bg-black/5 rounded-xl outline-none">
+                                    <span class="ml-2 text-sm">平方米</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 户型图上传 -->
+                            <div>
+                                <label class="block text-sm font-medium mb-1">户型图（选填）</label>
+                                <div class="border border-dashed border-black/20 rounded-xl p-4 flex flex-col items-center justify-center">
+                                    <div class="w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mb-2">
+                                        <i class="ri-upload-line text-2xl"></i>
+                                    </div>
+                                    <p class="text-sm text-black/40">点击上传户型图</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 示例户型图 -->
+                            <div>
+                                <label class="block text-sm font-medium mb-1">示例户型图</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div class="border border-black rounded-xl p-1">
+                                        <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="户型图1" class="w-full aspect-square object-cover rounded-lg">
+                                    </div>
+                                    <div class="border border-black/10 rounded-xl p-1">
+                                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7" alt="户型图2" class="w-full aspect-square object-cover rounded-lg">
+                                    </div>
+                                    <div class="border border-black/10 rounded-xl p-1">
+                                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="户型图3" class="w-full aspect-square object-cover rounded-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 提交按钮 -->
+                        <div class="mt-8">
+                            <button class="w-full bg-black text-white py-3 rounded-xl font-medium">确认添加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内容更新首页 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">内容更新首页</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex justify-between items-center px-8 py-4">
+                        <div class="flex-1 flex">
+                            <div class="nav-tab tab-active text-base">找灵感</div>
+                            <div class="nav-tab text-base text-black/40">邻居案例</div>
+                            <div class="nav-tab text-base text-black/40">找服务</div>
+                        </div>
+                        <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                            <i class="ri-user-line text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <!-- 欢迎语部分 -->
+                    <div class="welcome-container">
+                        <div class="welcome-title">嗨！我是设牛</div>
+                        <div class="welcome-subtitle">我可以帮您定制专属于您的个性化装修方案，解决您的问题，帮您整理需求</div>
+                    </div>
+                    
+                    <!-- 内容更新部分 -->
+                    <div class="p-4">
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">今日更新</h2>
+                                <button class="text-sm text-black/40">查看全部</button>
+                            </div>
+                            
+                            <!-- 内容卡片 -->
+                            <div class="service-card p-4 mb-4">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-20 h-20 rounded-xl overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="更新内容1" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-base mb-1">2023年最流行的10种装修风格</h3>
+                                        <p class="text-sm text-black/40 mb-2">从现代简约到新中式，总有一款适合您</p>
+                                        <div class="flex items-center text-xs text-black/40">
+                                            <span>10分钟前</span>
+                                            <span class="mx-2">·</span>
+                                            <span>设计频道</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card p-4 mb-4">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-20 h-20 rounded-xl overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="更新内容2" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-base mb-1">小户型空间利用技巧大全</h3>
+                                        <p class="text-sm text-black/40 mb-2">让您的小空间发挥最大价值</p>
+                                        <div class="flex items-center text-xs text-black/40">
+                                            <span>2小时前</span>
+                                            <span class="mx-2">·</span>
+                                            <span>装修攻略</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 热门话题 -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">热门话题</h2>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-black/5 rounded-2xl p-3 text-center">
+                                    <i class="ri-price-tag-3-line text-xl mb-2"></i>
+                                    <div class="text-sm font-medium">装修预算</div>
+                                </div>
+                                <div class="bg-black/5 rounded-2xl p-3 text-center">
+                                    <i class="ri-home-gear-line text-xl mb-2"></i>
+                                    <div class="text-sm font-medium">户型改造</div>
+                                </div>
+                                <div class="bg-black/5 rounded-2xl p-3 text-center">
+                                    <i class="ri-palette-line text-xl mb-2"></i>
+                                    <div class="text-sm font-medium">色彩搭配</div>
+                                </div>
+                                <div class="bg-black/5 rounded-2xl p-3 text-center">
+                                    <i class="ri-plant-line text-xl mb-2"></i>
+                                    <div class="text-sm font-medium">软装搭配</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 推荐设计师 -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-medium">推荐设计师</h2>
+                                <button class="text-sm text-black/40">查看更多</button>
+                            </div>
+                            
+                            <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                                <div class="designer-card w-28 flex-shrink-0">
+                                    <div class="designer-image">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" alt="设计师1">
+                                    </div>
+                                    <div class="p-2 text-center">
+                                        <div class="font-medium text-sm mb-1">王设计师</div>
+                                        <div class="text-xs text-black/40">5年经验</div>
+                                    </div>
+                                </div>
+                                <div class="designer-card w-28 flex-shrink-0">
+                                    <div class="designer-image">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500" alt="设计师2">
+                                    </div>
+                                    <div class="p-2 text-center">
+                                        <div class="font-medium text-sm mb-1">李设计师</div>
+                                        <div class="text-xs text-black/40">7年经验</div>
+                                    </div>
+                                </div>
+                                <div class="designer-card w-28 flex-shrink-0">
+                                    <div class="designer-image">
+                                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500" alt="设计师3">
+                                    </div>
+                                    <div class="p-2 text-center">
+                                        <div class="font-medium text-sm mb-1">张设计师</div>
+                                        <div class="text-xs text-black/40">3年经验</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 灵感集页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">灵感集</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex items-center px-8 py-4">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">我的灵感集</h2>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <!-- 灵感集分类 -->
+                        <div class="flex gap-2 overflow-x-auto mb-4 no-scrollbar">
+                            <button class="filter-tag active whitespace-nowrap">全部</button>
+                            <button class="filter-tag whitespace-nowrap">客厅</button>
+                            <button class="filter-tag whitespace-nowrap">卧室</button>
+                            <button class="filter-tag whitespace-nowrap">厨房</button>
+                            <button class="filter-tag whitespace-nowrap">卫生间</button>
+                            <button class="filter-tag whitespace-nowrap">书房</button>
+                        </div>
+                        
+                        <!-- 灵感集列表 -->
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="case-card">
+                                <div class="case-image">
+                                    <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0" alt="灵感1">
+                                    <div class="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                                        <i class="ri-heart-fill text-red-500"></i>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-xs text-black/40 mb-1">现代简约</div>
+                                    <div class="text-sm">客厅设计</div>
+                                </div>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-image">
+                                    <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92" alt="灵感2">
+                                    <div class="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                                        <i class="ri-heart-fill text-red-500"></i>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-xs text-black/40 mb-1">北欧风格</div>
+                                    <div class="text-sm">卧室设计</div>
+                                </div>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-image">
+                                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="灵感3">
+                                    <div class="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                                        <i class="ri-heart-fill text-red-500"></i>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-xs text-black/40 mb-1">日式风格</div>
+                                    <div class="text-sm">书房设计</div>
+                                </div>
+                            </div>
+                            <div class="case-card">
+                                <div class="case-image">
+                                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7" alt="灵感4">
+                                    <div class="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                                        <i class="ri-heart-fill text-red-500"></i>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="text-xs text-black/40 mb-1">混搭风格</div>
+                                    <div class="text-sm">厨房设计</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 创建新灵感集 -->
+                        <div class="service-card p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="ri-add-line text-2xl mr-4"></i>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">创建新灵感集</h3>
+                                    <p class="text-sm text-black/40">收集更多装修灵感</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 分享灵感集 -->
+                        <div class="service-card p-4">
+                            <div class="flex items-center">
+                                <i class="ri-share-line text-2xl mr-4"></i>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-base mb-1">分享我的灵感集</h3>
+                                    <p class="text-sm text-black/40">与亲友分享您的装修想法</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 需求档案页面 -->
+        <div class="page-wrapper">
+            <h2 class="page-title">需求档案</h2>
+            <div class="app-container">
+                <!-- 顶部导航栏 -->
+                <div class="nav-bar sticky top-0 z-10">
+                    <div class="flex items-center px-8 py-4">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">我的需求档案</h2>
+                    </div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="main-container">
+                    <div class="p-4">
+                        <!-- 户型信息卡片 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-lg font-medium">我的户型</div>
+                                <button class="text-sm text-black/40">
+                                    <i class="ri-edit-line"></i> 编辑
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center">
+                                    <i class="ri-map-pin-line text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium">北三环中路43号院</div>
+                                    <div class="text-sm text-black/40">三室一厅/120平</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-1/2">
+                                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf" alt="户型图" class="w-full rounded-xl">
+                                </div>
+                                <div class="w-1/2 grid grid-cols-2 gap-1.5">
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-sun-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">朝南卧室</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-home-smile-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">明卫</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-layout-masonry-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">超大空间</div>
+                                    </div>
+                                    <div class="bg-black/5 rounded-lg p-2 flex items-center">
+                                        <i class="ri-dashboard-line mr-1.5 text-base"></i>
+                                        <div class="text-xs font-medium">全格局</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 需求信息卡片 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-lg font-medium">我的装修需求</div>
+                                <button class="text-sm text-black/40">
+                                    <i class="ri-edit-line"></i> 编辑
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-user-smile-line text-xl"></i>
+                                        <span>我还有娃</span>
+                                    </div>
+                                    <div class="toggle-switch active">
+                                        <div class="toggle-handle" style="transform: translateX(20px);"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-restaurant-line text-xl"></i>
+                                        <span>喜欢开放式厨房</span>
+                                    </div>
+                                    <div class="toggle-switch active">
+                                        <div class="toggle-handle" style="transform: translateX(20px);"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="ri-home-smile-line text-xl"></i>
+                                        <span>喜欢超大客厅</span>
+                                    </div>
+                                    <div class="toggle-switch active">
+                                        <div class="toggle-handle" style="transform: translateX(20px);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 装修风格偏好 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-lg font-medium">装修风格偏好</div>
+                                <button class="text-sm text-black/40">
+                                    <i class="ri-edit-line"></i> 编辑
+                                </button>
+                            </div>
+                            <div class="flex gap-2 flex-wrap">
+                                <div class="bg-black text-white px-3 py-1.5 rounded-full text-sm">现代简约</div>
+                                <div class="bg-black/5 px-3 py-1.5 rounded-full text-sm">北欧风格</div>
+                                <div class="bg-black/5 px-3 py-1.5 rounded-full text-sm">日式风格</div>
+                                <div class="bg-black/5 px-3 py-1.5 rounded-full text-sm">美式风格</div>
+                                <div class="bg-black/5 px-3 py-1.5 rounded-full text-sm">新中式</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 预算信息 -->
+                        <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-black/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-lg font-medium">装修预算</div>
+                                <button class="text-sm text-black/40">
+                                    <i class="ri-edit-line"></i> 编辑
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center">
+                                    <i class="ri-money-cny-circle-line text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium">15-20万</div>
+                                    <div class="text-sm text-black/40">全包装修</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有切换按钮
+            const toggleSwitches = document.querySelectorAll('.toggle-switch');
+            
+            // 为每个切换按钮添加点击事件
+            toggleSwitches.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const handle = this.querySelector('.toggle-handle');
+                    if (this.classList.contains('active')) {
+                        handle.style.transform = 'translateX(20px)';
+                    } else {
+                        handle.style.transform = 'translateX(0)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
