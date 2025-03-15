@@ -377,9 +377,20 @@
             color: white;
             padding: 8px 16px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
             z-index: 9999;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .debug-toolbar .flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            width: 100%;
         }
 
         .debug-toggle {
@@ -388,6 +399,7 @@
             padding: 4px 8px;
             font-size: 14px;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .debug-toggle.active {
@@ -419,6 +431,10 @@
             <button class="debug-toggle" id="chatWithHouseToggle">已绑定户型+无需求表达</button>
             <button class="debug-toggle" id="chatWithHouseAndNeedsToggle">已绑定户型+有需求表达</button>
             <button class="debug-toggle" id="contentUpdateToggle">内容更新首页</button>
+            <button class="debug-toggle" id="inspirationToggle">灵感集</button>
+            <button class="debug-toggle" id="requirementsToggle">需求档案</button>
+            <button class="debug-toggle" onclick="window.location.href='service_cards.html'">服务卡片</button>
+            <button class="debug-toggle" onclick="window.location.href='modal_view.html'">半屏浮层</button>
         </div>
     </div>
 
@@ -426,9 +442,14 @@
         <!-- 顶部导航栏 -->
         <div class="nav-bar sticky top-0 z-10">
             <div class="flex justify-between items-center px-8 py-4">
-                <div class="nav-tab tab-active text-base">找灵感</div>
-                <div class="nav-tab text-base text-black/40">邻居案例</div>
-                <div class="nav-tab text-base text-black/40">找服务</div>
+                <div class="flex-1 flex">
+                    <div class="nav-tab tab-active text-base">找灵感</div>
+                    <div class="nav-tab text-base text-black/40">邻居案例</div>
+                    <div class="nav-tab text-base text-black/40">找服务</div>
+                </div>
+                <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                    <i class="ri-user-line text-xl"></i>
+                </div>
             </div>
         </div>
         
@@ -1051,6 +1072,213 @@
                 </div>
             </div>
         </div>
+
+        <!-- 灵感集页面 -->
+        <div class="main-container hidden" id="inspirationView">
+            <div class="p-4">
+                <!-- 顶部标题 -->
+                <div class="mb-6">
+                    <div class="flex items-center">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2" id="backFromInspiration">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">我的灵感集</h2>
+                    </div>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-3 bg-black/3 rounded-xl px-4 py-3">
+                        <i class="ri-search-line text-black/40"></i>
+                        <input type="text" 
+                               class="bg-transparent flex-1 outline-none text-sm"
+                               placeholder="搜索案例、风格、空间...">
+                    </div>
+                </div>
+                
+                <!-- 案例瀑布流 -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- 左侧瀑布流 -->
+                    <div class="space-y-4">
+                        <div class="space-y-3">
+                            <div class="case-image">
+                                <div class="case-tag">已收藏</div>
+                                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                                     alt="案例1">
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-black/40">
+                                <i class="ri-map-pin-line"></i>
+                                <span>昌平·新龙城</span>
+                            </div>
+                            <div class="text-xs">90m² · 两室一厅 · 现代简约</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="case-image">
+                                <div class="case-tag">已收藏</div>
+                                <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                                     alt="案例3">
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-black/40">
+                                <i class="ri-map-pin-line"></i>
+                                <span>昌平·新龙城</span>
+                            </div>
+                            <div class="text-xs">88m² · 两室一厅 · 北欧风格</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="case-image">
+                                <div class="case-tag">已收藏</div>
+                                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                                     alt="案例5">
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-black/40">
+                                <i class="ri-map-pin-line"></i>
+                                <span>朝阳·望京</span>
+                            </div>
+                            <div class="text-xs">105m² · 三室一厅 · 日式风格</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧瀑布流 -->
+                    <div class="space-y-4">
+                        <div class="space-y-3">
+                            <div class="case-image">
+                                <div class="case-tag">已收藏</div>
+                                <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                                     alt="案例2">
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-black/40">
+                                <i class="ri-map-pin-line"></i>
+                                <span>昌平·新龙城</span>
+                            </div>
+                            <div class="text-xs">92m² · 两室一厅 · 日式风格</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="case-image">
+                                <div class="case-tag">已收藏</div>
+                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                                     alt="案例4">
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-black/40">
+                                <i class="ri-map-pin-line"></i>
+                                <span>昌平·新龙城</span>
+                            </div>
+                            <div class="text-xs">95m² · 两室一厅 · 混搭风格</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="case-image">
+                                <div class="case-tag">已收藏</div>
+                                <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                                     alt="案例6">
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-black/40">
+                                <i class="ri-map-pin-line"></i>
+                                <span>海淀·中关村</span>
+                            </div>
+                            <div class="text-xs">88m² · 两室一厅 · 现代简约</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 需求档案页面 -->
+        <div class="main-container hidden" id="requirementsView">
+            <div class="p-4">
+                <!-- 顶部标题 -->
+                <div class="mb-6">
+                    <div class="flex items-center">
+                        <button class="w-8 h-8 flex items-center justify-center mr-2" id="backFromRequirements">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-medium">我的需求档案</h2>
+                    </div>
+                </div>
+                
+                <!-- 户型简介模块 -->
+                <div class="service-card p-4 mb-6">
+                    <h3 class="font-medium text-base mb-4">户型信息</h3>
+                    
+                    <!-- 户型图 -->
+                    <div class="mb-4">
+                        <img src="https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+                             alt="户型图" class="w-full h-48 object-cover rounded-xl">
+                    </div>
+                    
+                    <!-- 房屋信息 -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">小区名称</div>
+                            <div class="text-sm font-medium">北三环中路43号院</div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">房屋格局</div>
+                            <div class="text-sm font-medium">两室一厅一卫</div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">建筑面积</div>
+                            <div class="text-sm font-medium">90平米</div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">朝向</div>
+                            <div class="text-sm font-medium">南北通透</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 家庭信息模块 -->
+                <div class="service-card p-4 mb-6">
+                    <h3 class="font-medium text-base mb-4">家庭信息</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">家庭人口</div>
+                            <div class="text-sm font-medium">3人（2大人1小孩）</div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">风格意向</div>
+                            <div class="text-sm font-medium">原木风</div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">喜欢色系</div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 rounded-full bg-amber-100"></div>
+                                <div class="w-5 h-5 rounded-full bg-stone-200"></div>
+                                <div class="w-5 h-5 rounded-full bg-stone-700"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-black/60">装修预算</div>
+                            <div class="text-sm font-medium">15-20万</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 用户需求模块 -->
+                <div class="service-card p-4 mb-6">
+                    <h3 class="font-medium text-base mb-4">我的需求</h3>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">有小孩</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">喜欢更多收纳空间</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">已打扫</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">开放式厨房</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">需要儿童房</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">需要书房</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">喜欢大窗户</div>
+                        <div class="bg-black/5 px-3 py-2 rounded-full text-sm">需要衣帽间</div>
+                    </div>
+                </div>
+                
+                <!-- 编辑按钮 -->
+                <button class="w-full bg-black text-white py-3.5 rounded-2xl text-sm font-medium">
+                    编辑需求档案
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1086,6 +1314,10 @@
             const chatWithHouseAndNeedsView = document.getElementById('chatWithHouseAndNeedsView');
             const contentUpdateToggle = document.getElementById('contentUpdateToggle');
             const contentUpdateView = document.getElementById('contentUpdateView');
+            const inspirationToggle = document.getElementById('inspirationToggle');
+            const inspirationView = document.getElementById('inspirationView');
+            const requirementsToggle = document.getElementById('requirementsToggle');
+            const requirementsView = document.getElementById('requirementsView');
             
             function hideAllViews() {
                 firstTimeView.classList.add('hidden');
@@ -1094,6 +1326,8 @@
                 chatWithHouseView.classList.add('hidden');
                 chatWithHouseAndNeedsView.classList.add('hidden');
                 contentUpdateView.classList.add('hidden');
+                inspirationView.classList.add('hidden');
+                requirementsView.classList.add('hidden');
                 
                 firstTimeToggle.classList.remove('active');
                 chatToggle.classList.remove('active');
@@ -1101,6 +1335,8 @@
                 chatWithHouseToggle.classList.remove('active');
                 chatWithHouseAndNeedsToggle.classList.remove('active');
                 contentUpdateToggle.classList.remove('active');
+                inspirationToggle.classList.remove('active');
+                requirementsToggle.classList.remove('active');
             }
 
             firstTimeToggle.addEventListener('click', function() {
@@ -1137,6 +1373,18 @@
                 hideAllViews();
                 contentUpdateToggle.classList.add('active');
                 contentUpdateView.classList.remove('hidden');
+            });
+            
+            inspirationToggle.addEventListener('click', function() {
+                hideAllViews();
+                inspirationToggle.classList.add('active');
+                inspirationView.classList.remove('hidden');
+            });
+            
+            requirementsToggle.addEventListener('click', function() {
+                hideAllViews();
+                requirementsToggle.classList.add('active');
+                requirementsView.classList.remove('hidden');
             });
             
             // 首次进入状态的输入框点击事件
@@ -1219,6 +1467,16 @@
                 document.getElementById('requirementModal').classList.remove('active');
             }
 
+            function showMyProfileModal() {
+                document.getElementById('modalOverlay').classList.add('active');
+                document.getElementById('myProfileModal').classList.add('active');
+            }
+
+            function closeMyProfileModal() {
+                document.getElementById('modalOverlay').classList.remove('active');
+                document.getElementById('myProfileModal').classList.remove('active');
+            }
+
             function adjustMembers(delta) {
                 const countElement = document.getElementById('memberCount');
                 let count = parseInt(countElement.textContent);
@@ -1244,7 +1502,61 @@
             // 点击遮罩关闭浮层
             const modalOverlay = document.getElementById('modalOverlay');
             if (modalOverlay) {
-                modalOverlay.addEventListener('click', closeRequirementModal);
+                modalOverlay.addEventListener('click', function() {
+                    closeRequirementModal();
+                    closeMyProfileModal();
+                });
+            }
+
+            // 我的按钮点击事件
+            const myProfileBtn = document.getElementById('myProfileBtn');
+            if (myProfileBtn) {
+                myProfileBtn.addEventListener('click', function() {
+                    showMyProfileModal();
+                });
+            }
+
+            // 关闭我的浮层按钮点击事件
+            const closeMyProfileBtn = document.getElementById('closeMyProfileModal');
+            if (closeMyProfileBtn) {
+                closeMyProfileBtn.addEventListener('click', function() {
+                    document.getElementById('modalOverlay').classList.remove('active');
+                    document.getElementById('myProfileModal').classList.remove('active');
+                });
+            }
+
+            // 灵感集按钮点击事件
+            const goToInspirationBtn = document.getElementById('goToInspirationBtn');
+            if (goToInspirationBtn) {
+                goToInspirationBtn.addEventListener('click', function() {
+                    closeMyProfileModal();
+                    inspirationToggle.click();
+                });
+            }
+
+            // 需求档案按钮点击事件
+            const goToRequirementsBtn = document.getElementById('goToRequirementsBtn');
+            if (goToRequirementsBtn) {
+                goToRequirementsBtn.addEventListener('click', function() {
+                    closeMyProfileModal();
+                    requirementsToggle.click();
+                });
+            }
+
+            // 灵感集页面返回按钮点击事件
+            const backFromInspiration = document.getElementById('backFromInspiration');
+            if (backFromInspiration) {
+                backFromInspiration.addEventListener('click', function() {
+                    firstTimeToggle.click(); // 返回首次进入状态
+                });
+            }
+
+            // 需求档案页面返回按钮点击事件
+            const backFromRequirements = document.getElementById('backFromRequirements');
+            if (backFromRequirements) {
+                backFromRequirements.addEventListener('click', function() {
+                    firstTimeToggle.click(); // 返回首次进入状态
+                });
             }
         });
     </script>
@@ -1357,6 +1669,46 @@
             <button class="w-full bg-black text-white py-3 rounded-2xl text-base font-medium active:opacity-90 active:transform active:scale-98">
                 我家方案定制完成！
             </button>
+        </div>
+    </div>
+
+    <!-- 我的浮层 -->
+    <div class="half-screen-modal" id="myProfileModal" style="height: auto; max-height: 40%;">
+        <div class="p-4">
+            <!-- 顶部标题 -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="text-lg font-medium">我的</div>
+                    <button class="text-black/40" id="closeMyProfileModal">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 功能入口 -->
+            <div class="space-y-4">
+                <div class="service-card p-4" id="goToInspirationBtn">
+                    <div class="flex items-center">
+                        <i class="ri-lightbulb-line text-2xl mr-4"></i>
+                        <div class="flex-1">
+                            <h3 class="font-medium text-base">灵感集</h3>
+                            <p class="text-sm text-black/40">查看您收藏的所有装修案例</p>
+                        </div>
+                        <i class="ri-arrow-right-s-line text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="service-card p-4" id="goToRequirementsBtn">
+                    <div class="flex items-center">
+                        <i class="ri-file-list-line text-2xl mr-4"></i>
+                        <div class="flex-1">
+                            <h3 class="font-medium text-base">需求档案</h3>
+                            <p class="text-sm text-black/40">查看您的户型和装修需求信息</p>
+                        </div>
+                        <i class="ri-arrow-right-s-line text-2xl"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

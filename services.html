@@ -184,9 +184,14 @@
         <!-- 顶部导航栏 -->
         <div class="nav-bar sticky top-0 z-10">
             <div class="flex justify-between items-center px-8 py-4">
-                <div class="nav-tab text-base text-black/40">找灵感</div>
-                <div class="nav-tab text-base text-black/40">邻居案例</div>
-                <div class="nav-tab tab-active text-base">找服务</div>
+                <div class="flex-1 flex">
+                    <div class="nav-tab text-base text-black/40" onclick="window.location.href='index.html'">找灵感</div>
+                    <div class="nav-tab text-base text-black/40" onclick="window.location.href='solutions.html'">邻居案例</div>
+                    <div class="nav-tab tab-active text-base">找服务</div>
+                </div>
+                <div class="w-8 h-8 flex items-center justify-center" id="myProfileBtn">
+                    <i class="ri-user-line text-xl"></i>
+                </div>
             </div>
         </div>
         
