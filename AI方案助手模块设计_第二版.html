@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI方案助手模块</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 414px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+        }
+        
+        /* 房屋设计页面内容 */
+        .design-section {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 16px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        /* AI方案助手模块 - 原木色风格 */
+        .ai-assistant-module {
+            margin: 15px 0;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .ai-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .view-more {
+            display: flex;
+            align-items: center;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .arrow-icon {
+            width: 16px;
+            height: 16px;
+            margin-left: 2px;
+        }
+        
+        /* AI卡片样式 */
+        .ai-card {
+            background: linear-gradient(135deg, #b88b4a, #d7a96c);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(184, 139, 74, 0.2);
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .ai-icon-wrapper {
+            width: 46px;
+            height: 46px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .ai-icon {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+        
+        .ai-content {
+            flex-grow: 1;
+        }
+        
+        .ai-card-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .ai-description {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .ai-benefits {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+        }
+        
+        .ai-benefit-item {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            padding-left: 15px;
+            position: relative;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        
+        .ai-benefit-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .ai-action-button {
+            background-color: white;
+            color: #b88b4a;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+        }
+        
+        /* 标签筛选 */
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag {
+            background-color: #f5f5f5;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 7px 14px;
+            font-size: 13px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 5px;
+            fill: #666;
+        }
+        
+        .tag.active {
+            background-color: #f8f0e5;
+            border-color: #ebd8b9;
+            color: #b88b4a;
+        }
+        
+        .tag.active svg {
+            fill: #b88b4a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 模拟设计我家页面内容 -->
+        <div class="design-section">
+            <div class="section-title">我家可参考的真实案例</div>
+            <!-- 案例内容 -->
+        </div>
+        
+        <!-- AI方案助手模块 -->
+        <div class="design-section">
+            <div class="ai-header">
+                <h2 class="ai-title">AI方案助手</h2>
+                <div class="view-more">
+                    查看更多
+                    <svg class="arrow-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="#999"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="ai-card">
+                <div class="ai-icon-wrapper">
+                    <svg class="ai-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10C22,6.48,17.52,2,12,2z M13,19h-2v-2h2V19z M15.07,11.25l-0.9,0.92C13.45,12.9,13,13.5,13,15h-2v-0.5c0-1.1,0.45-2.1,1.17-2.83l1.24-1.26C13.78,10.05,14,9.55,14,9c0-1.1-0.9-2-2-2s-2,0.9-2,2H8c0-2.21,1.79-4,4-4s4,1.79,4,4C16,9.9,15.66,10.75,15.07,11.25z"/>
+                    </svg>
+                </div>
+                <div class="ai-content">
+                    <h3 class="ai-card-title">AI智能设计方案推荐</h3>
+                    <ul class="ai-benefits">
+                        <li class="ai-benefit-item">十万+设计方案库智能匹配</li>
+                        <li class="ai-benefit-item">根据户型精准定制专属设计</li>
+                        <li class="ai-benefit-item">一键获取多风格装修效果图</li>
+                    </ul>
+                    <button class="ai-action-button">立即体验</button>
+                </div>
+            </div>
+            
+            <div class="tag-filters">
+                <div class="tag active">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z"/>
+                    </svg>
+                    现代简约
+                </div>
+                <div class="tag">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z"/>
+                    </svg>
+                    日式原木
+                </div>
+                <div class="tag">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z"/>
+                    </svg>
+                    北欧风格
+                </div>
+                <div class="tag">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z"/>
+                    </svg>
+                    轻奢风
+                </div>
+            </div>
+        </div>
+        
+        <div class="design-section">
+            <div class="section-title">DIY我的家</div>
+            <!-- DIY内容 -->
+        </div>
+    </div>
+</body>
+</html> 
